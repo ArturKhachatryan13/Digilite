@@ -14,8 +14,6 @@ const CreateTicket = () => {
   const navigate = useNavigate();
 
   const onFinish = async (value) => {
-    console.log(value);
-
     try {
       const response = await post("/tickets", { ...value, status: "open" });
       if (response.createdAt) {
@@ -31,7 +29,7 @@ const CreateTicket = () => {
       <Title size="big" className="ticket-title">
         Create New Support Ticket
       </Title>
-      <Text size="small">
+      <Text size="small" className="text-muted-foreground">
         Please provide details about the issue you're experiencing. Our support
         team will respond as soon as possible.
       </Text>

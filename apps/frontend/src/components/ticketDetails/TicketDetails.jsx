@@ -27,14 +27,32 @@ export const formatDate = (isoDateString) => {
 
 const TicketDetail = () => {
   const { id } = useParams();
-  const { get, post } = useApi();
+  const { get, post, patch } = useApi();
   const navigate = useNavigate();
   const [ticket, setTicket] = useState([]);
   const { replies } = ticket || [];
+  const [form] = Form.useForm();
 
-  const onFinish = async (data) => {
+  const AddReply = async (data) => {
     try {
       const response = await post("/replies", { ...data, ticketId: +id });
+      form.resetFields(["message"]);
+
+      if (response.createdAt) {
+        get(`/tickets/${id}`).then((data) => setTicket(data));
+      }
+    } catch (error) {
+      console.error("Something went wrong", error);
+    }
+  };
+
+  const closeTicket = async () => {
+    try {
+      const response = await patch(`/tickets/${id}`, {
+        status: ticket.status === "open" ? "closed" : "open",
+      });
+      form.resetFields(["message"]);
+
       if (response.createdAt) {
         get(`/tickets/${id}`).then((data) => setTicket(data));
       }
@@ -47,7 +65,7 @@ const TicketDetail = () => {
     try {
       get(`/tickets/${id}`).then((data) => setTicket(data));
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }, [setTicket]);
 
@@ -63,7 +81,7 @@ const TicketDetail = () => {
         <Title size="big">{ticket?.title}</Title>
         <div>
           <StatusBadge className="ticket-status" status={ticket?.status} />
-          <Button>Close ticket</Button>
+          <Button onClick={closeTicket}>Close ticket</Button>
         </div>
       </div>
       <Container>
@@ -129,18 +147,18 @@ const TicketDetail = () => {
         <Divider />
       </div>
       <Container className="form-container">
-        <Form onFinish={onFinish}>
+        <Form form={form} onFinish={AddReply}>
           <Form.Item
             name="message"
             rules={[{ required: true, message: "Please enter a reply" }]}
           >
             <StyledTextArea
               placeholder="Type your reply here..."
-              className="ticket-text-area"
+              className="reply-text-area"
             />
           </Form.Item>
           <Button type="primary" htmlType="submit">
-            Submit Ticket
+            Add reply
           </Button>
         </Form>
       </Container>

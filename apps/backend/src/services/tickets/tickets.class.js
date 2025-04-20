@@ -23,8 +23,63 @@ export class TicketsService extends KnexService {
   }
 
   async find(params) {
-    const result = await super.find(params)
-    return result
+    const { query = {} } = params
+    const { search, ...restQuery } = query
+
+    if (search) {
+      const knex = this.app.get('postgresqlClient')
+
+      const tickets = await knex('tickets')
+        .where(builder => {
+          builder.whereILike('title', `%${search}%`).orWhereILike('description', `%${search}%`)
+        })
+        .where(builder => {
+          if (restQuery.status) {
+            builder.andWhere('status', restQuery.status)
+          }
+          if (restQuery.id) {
+            builder.andWhere('id', restQuery.id)
+          }
+        })
+
+      const ticketsWithReplies = await Promise.all(
+        tickets.map(async ticket => {
+          const replies = await this.app.service('replies').find({
+            query: { ticketId: ticket.id },
+            paginate: false
+          })
+
+          return {
+            ...ticket,
+            replies
+          }
+        })
+      )
+
+      return ticketsWithReplies
+    }
+
+    const result = await super.find({ ...params, query: restQuery })
+
+    const tickets = result.data || result
+
+    const ticketsWithReplies = await Promise.all(
+      tickets.map(async ticket => {
+        const replies = await this.app.service('replies').find({
+          query: {
+            ticketId: ticket.id
+          },
+          paginate: false
+        })
+
+        return {
+          ...ticket,
+          replies
+        }
+      })
+    )
+
+    return ticketsWithReplies
   }
 
   async create(data, params) {
@@ -39,6 +94,9 @@ export class TicketsService extends KnexService {
     const result = await super.create(ticketData, params)
 
     return result
+  }
+  async patch(id, data, params) {
+    return super.patch(id, data, params)
   }
 }
 

@@ -55,7 +55,7 @@ const TicketDetailsWrapper = styled.div`
   }
   .form-container {
     margin-bottom: 120px;
-    .ticket-text-area {
+    .reply-text-area {
       height: 120px;
       margin-bottom: 8px;
     }

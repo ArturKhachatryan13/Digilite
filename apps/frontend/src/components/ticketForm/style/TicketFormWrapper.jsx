@@ -1,16 +1,17 @@
 import styled from "styled-components";
 
 const TicketFormWrapper = styled.div`
-  margin-left: 80px;
-  margin-right: 80px;
-  padding-left: 30px;
-  padding-right: 30px;
+  margin: 0 80px;
+  padding: 0 30px;
   .ticket-title {
-    margin-bottom: 15px;
+    margin-bottom: 16px;
   }
   .ticket-text-area {
-    height: 142px;
+    height: 140px;
     margin-bottom: 8px;
+  }
+  .text-muted-foreground {
+    margin-bottom: 24px;
   }
 `;
 

@@ -10,6 +10,10 @@ const TicketsListWrapper = styled.div`
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    margin: 24px 0;
+  }
+  .search-container {
+    margin-bottom: 24px;
   }
   .card-container {
     margin-bottom: 24px;
@@ -29,6 +33,9 @@ const TicketsListWrapper = styled.div`
     margin-bottom: 16px;
   }
   .meta-data-text {
+    margin-bottom: 8px;
+  }
+  .description-text {
     margin-bottom: 8px;
   }
 `;

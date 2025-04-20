@@ -37,7 +37,15 @@ export const ticketsPatchResolver = resolve({})
 // Schema for allowed query properties
 export const ticketsQueryProperties = Type.Pick(ticketsSchema, ['id', 'title', 'status'])
 export const ticketsQuerySchema = Type.Intersect(
-  [querySyntax(ticketsQueryProperties), Type.Object({}, { additionalProperties: false })],
+  [
+    querySyntax(ticketsQueryProperties),
+    Type.Object(
+      {
+        search: Type.Optional(Type.String())
+      },
+      { additionalProperties: false }
+    )
+  ],
   { additionalProperties: false }
 )
 export const ticketsQueryValidator = getValidator(ticketsQuerySchema, queryValidator)

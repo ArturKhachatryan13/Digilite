@@ -10,7 +10,11 @@ const api = axios.create({
 
 export const useApi = () => {
   const get = async (url, config = {}) => {
-    const response = await api.get(url, config);
+    const { query = {}, ...rest } = config;
+    const response = await api.get(url, {
+      ...rest,
+      params: query,
+    });
     return response.data;
   };
 
@@ -28,6 +32,9 @@ export const useApi = () => {
     const response = await api.delete(url, config);
     return response.data;
   };
-
-  return { get, post, put, del };
+  const patch = async (url, config = {}) => {
+    const response = await api.patch(url, config);
+    return response.data;
+  };
+  return { get, post, put, del, patch };
 };
