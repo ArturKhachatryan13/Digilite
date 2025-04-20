@@ -11,12 +11,14 @@ const Button = styled(AntButton)`
         return css``;
       case "secondary":
         return css``;
-      default:
+      case "link":
         return css`
-          background-color: #fafafa;
-          color: #000;
-          border: 1px solid #d9d9d9;
+          border: none;
+          margin: 0;
+          padding: 0;
         `;
+      default:
+        return css``;
     }
   }};
 `;

@@ -1,8 +1,9 @@
 import styled, { css } from "styled-components";
 
 const Text = styled.h1`
-  ${"" /* color: rgb(107 114 128); */}
-  ${({ size }) => {
+  margin: 0;
+  padding: 0;
+  ${({ size, color }) => {
     switch (size) {
       case "big":
         return css`
@@ -22,6 +23,7 @@ const Text = styled.h1`
           font-weight: 400;
           word-break: break-word;
           line-height: 1.5;
+          color: ${color};
         `;
       default:
         return css`

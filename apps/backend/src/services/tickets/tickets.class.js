@@ -1,15 +1,32 @@
 import { KnexService } from '@feathersjs/knex'
 
 export class TicketsService extends KnexService {
+  constructor(options, app) {
+    super(options)
+    this.app = app // 💡 сохраняем app внутри класса
+  }
+
   async get(id, params) {
     const ticket = await super.get(id, params)
-    return ticket
+
+    const replies = await this.app.service('replies').find({
+      query: {
+        ticketId: id
+      },
+      paginate: false
+    })
+
+    return {
+      ...ticket,
+      replies
+    }
   }
 
   async find(params) {
     const result = await super.find(params)
     return result
   }
+
   async create(data, params) {
     const ticketData = {
       title: data.title,

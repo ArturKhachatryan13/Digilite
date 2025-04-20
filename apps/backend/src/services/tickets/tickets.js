@@ -22,7 +22,7 @@ export * from './tickets.schema.js'
 // A configure function that registers the service and its hooks via `app.configure`
 export const tickets = app => {
   // Register our service on the Feathers application
-  app.use(ticketsPath, new TicketsService(getOptions(app)), {
+  app.use(ticketsPath, new TicketsService(getOptions(app), app), {
     // A list of all methods this service exposes externally
     methods: ticketsMethods,
     // You can add additional custom events to be sent to clients here

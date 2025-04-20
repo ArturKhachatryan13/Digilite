@@ -10,7 +10,7 @@ const Title = styled.h1`
         return css`
           font-size: 30px;
           font-weight: 700;
-          line-height: 2;
+          line-height: 1.5;
         `;
       case "middle":
         return css`
@@ -22,7 +22,7 @@ const Title = styled.h1`
         return css`
           font-weight: 600;
           font-size: 16px;
-          line-height: 1.5;
+          line-height: 1.1;
         `;
       default:
         return css`
