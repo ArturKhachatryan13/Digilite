@@ -1,7 +1,29 @@
 import { KnexService } from '@feathersjs/knex'
 
-// By default calls the standard Knex adapter service methods but can be customized with your own functionality.
-export class TicketsService extends KnexService {}
+export class TicketsService extends KnexService {
+  async get(id, params) {
+    const ticket = await super.get(id, params)
+    return ticket
+  }
+
+  async find(params) {
+    const result = await super.find(params)
+    return result
+  }
+  async create(data, params) {
+    const ticketData = {
+      title: data.title,
+      description: data.description || '',
+      status: data.status || 'open',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    }
+
+    const result = await super.create(ticketData, params)
+
+    return result
+  }
+}
 
 export const getOptions = app => {
   return {
