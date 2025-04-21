@@ -33,6 +33,13 @@ npm install
 cd apps/backend && npm install
 cd apps/frontend && npm install
 
+Create the PostgreSQL Database
+    psql -U postgres
+    CREATE DATABASE tickets_db;
+
+Replace tickets_db with the name you use in your .env file.
+
+
 
 In the apps/backend directory, create a .env file with the following content: 
 DATABASE_URL=postgres://user:password@localhost:5432/tickets_db
