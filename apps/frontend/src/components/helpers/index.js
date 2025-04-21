@@ -10,3 +10,9 @@ export const formatDate = (isoDateString) => {
     second: "2-digit",
   });
 };
+
+export const changeFormatDate = (isoDateString) => {
+  if (!isoDateString) return "";
+  const date = new Date(isoDateString);
+  return date.toLocaleDateString("ru-RU");
+};

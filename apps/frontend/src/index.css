@@ -50,9 +50,9 @@ header {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
-/* Основной контент под хедером */
+
 main {
-  margin-top: 60px; /* отступ равен высоте header */
+  margin-top: 60px; 
   padding: 1rem;
   flex-grow: 1;
 }

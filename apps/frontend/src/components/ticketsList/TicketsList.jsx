@@ -1,20 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
+
 import TicketsListWrapper from "./style/TicketsListWrapper";
 import Title from "../../style-guide/title";
 import Button from "../../style-guide/button";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { useApi } from "../../hooks/useApi";
-import Container from "../../style-guide/container";
-import Divider from "../../style-guide/divider";
-import Text from "../../style-guide/text";
-import { StatusBadge } from "../../style-guide/badge/Badge";
-import { Radio, Input } from "antd";
 
-export const formatDate = (isoDateString) => {
-  if (!isoDateString) return "";
-  const date = new Date(isoDateString);
-  return date.toLocaleDateString("ru-RU");
-};
+import { useApi } from "../../hooks/useApi";
+import PATHS from "../constants/paths";
+import SearchTickets from "./components/SearchTickets";
+import Tickets from "./components/Tickets";
 
 const TicketsList = () => {
   const [tickets, setTickets] = useState([]);
@@ -26,21 +20,21 @@ const TicketsList = () => {
   const { get } = useApi();
   const navigate = useNavigate();
 
+  const buildQuery = (params) => {
+    const status = params.get("status");
+    const search = params.get("search");
+
+    const query = {};
+    if (status && status !== "all") query.status = status;
+    if (search?.trim()) query.search = search;
+
+    return query;
+  };
+
   useEffect(() => {
     const fetchTickets = async () => {
-      const query = {};
-      const status = searchParams.get("status");
-      const search = searchParams.get("search");
-
-      if (status && status !== "all") {
-        query.status = status;
-      }
-
-      if (search && search.trim()) {
-        query.search = search;
-      }
-
       try {
+        const query = buildQuery(searchParams);
         const data = await get("/tickets", { query });
         setTickets(data);
       } catch (error) {
@@ -50,10 +44,6 @@ const TicketsList = () => {
 
     fetchTickets();
   }, [searchParams]);
-
-  const goToTicket = (id) => {
-    navigate(`ticket/${id}`);
-  };
 
   const handleStatusChange = (e) => {
     const newStatus = e.target.value;
@@ -80,54 +70,18 @@ const TicketsList = () => {
     <TicketsListWrapper className="row">
       <div className="col-12 ticket-creation-container">
         <Title size="big">Support Tickets</Title>
-        <Button onClick={() => navigate("/create")} type="primary">
+        <Button onClick={() => navigate(PATHS.CREATE_TICKET)} type="primary">
           New ticket
         </Button>
       </div>
-      <div className="search-container">
-        <Input.Search
-          placeholder="Search by title"
-          allowClear
-          defaultValue={searchValue}
-          enterButton
-          onSearch={handleSearch}
-          style={{ width: 200, marginRight: 16 }}
-        />
-        <Radio.Group value={filterStatus} onChange={handleStatusChange}>
-          <Radio.Button value="all">All</Radio.Button>
-          <Radio.Button value="open">Open</Radio.Button>
-          <Radio.Button value="closed">Closed</Radio.Button>
-        </Radio.Group>
-      </div>
+      <SearchTickets
+        handleStatusChange={handleStatusChange}
+        filterStatus={filterStatus}
+        searchValue={searchValue}
+        handleSearch={handleSearch}
+      />
       {tickets?.map((ticket) => (
-        <Container
-          key={ticket?.id}
-          className="row card-container"
-          onClick={() => goToTicket(ticket?.id)}
-        >
-          <div className="badge-container col-12">
-            <StatusBadge status={ticket?.status} />
-          </div>
-          <Divider />
-          <div className="content-container">
-            <Title className="main-title" size="small">
-              {ticket?.title}
-            </Title>
-            <Text
-              color="rgba(0, 0, 0, 0.45)"
-              className="meta-data-text"
-              size="small"
-            >
-              ID: {ticket?.id} | Created: {formatDate(ticket?.createdAt)}
-            </Text>
-            <Text className="description-text" size="small">
-              {ticket?.description}
-            </Text>
-            <Text color="rgba(0, 0, 0, 0.45)" size="small">
-              {ticket?.replies.length} replies
-            </Text>
-          </div>
-        </Container>
+        <Tickets key={ticket?.id} ticket={ticket} />
       ))}
     </TicketsListWrapper>
   );

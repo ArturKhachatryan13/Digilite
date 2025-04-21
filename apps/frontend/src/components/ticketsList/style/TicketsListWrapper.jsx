@@ -13,7 +13,12 @@ const TicketsListWrapper = styled.div`
     margin: 24px 0;
   }
   .search-container {
+    display: flex;
     margin-bottom: 24px;
+    .search-input {
+      width: 200px;
+      margin-right: 16px;
+    }
   }
   .card-container {
     margin-bottom: 24px;
