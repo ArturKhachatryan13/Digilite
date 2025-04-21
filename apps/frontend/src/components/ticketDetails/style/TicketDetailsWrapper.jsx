@@ -1,8 +1,7 @@
 import styled from "styled-components";
 
 const TicketDetailsWrapper = styled.div`
-  margin-left: 112px;
-  margin-right: 112px;
+  margin: 0 112px;
   padding-top: 24px;
   .back-button-container {
     margin-bottom: 16px;
@@ -10,6 +9,7 @@ const TicketDetailsWrapper = styled.div`
   .back-icon {
     color: #1677ff;
     margin-right: 4px;
+    font-size: 12px;
   }
   .ticket-title-container {
     display: flex;

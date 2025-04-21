@@ -12,8 +12,7 @@ const HeaderWrapper = styled.header`
   background-color: rgb(255 255 255);
   .header-title {
     padding: 0;
-    margin-left: 36px;
-    margin-right: 24px;
+    margin: 0 24px 0 36px;
   }
 `;
 
