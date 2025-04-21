@@ -1,25 +1,15 @@
+import attachReplies from '../helpers/index.js'
 import { KnexService } from '@feathersjs/knex'
 
 export class TicketsService extends KnexService {
   constructor(options, app) {
     super(options)
-    this.app = app // 💡 сохраняем app внутри класса
+    this.app = app
   }
 
   async get(id, params) {
     const ticket = await super.get(id, params)
-
-    const replies = await this.app.service('replies').find({
-      query: {
-        ticketId: id
-      },
-      paginate: false
-    })
-
-    return {
-      ...ticket,
-      replies
-    }
+    return attachReplies(this.app, ticket)
   }
 
   async find(params) {
@@ -37,47 +27,17 @@ export class TicketsService extends KnexService {
           if (restQuery.status) {
             builder.andWhere('status', restQuery.status)
           }
-          if (restQuery.id) {
-            builder.andWhere('id', restQuery.id)
-          }
         })
 
-      const ticketsWithReplies = await Promise.all(
-        tickets.map(async ticket => {
-          const replies = await this.app.service('replies').find({
-            query: { ticketId: ticket.id },
-            paginate: false
-          })
-
-          return {
-            ...ticket,
-            replies
-          }
-        })
-      )
+      const ticketsWithReplies = await Promise.all(tickets.map(ticket => attachReplies(this.app, ticket)))
 
       return ticketsWithReplies
     }
 
     const result = await super.find({ ...params, query: restQuery })
-
     const tickets = result.data || result
 
-    const ticketsWithReplies = await Promise.all(
-      tickets.map(async ticket => {
-        const replies = await this.app.service('replies').find({
-          query: {
-            ticketId: ticket.id
-          },
-          paginate: false
-        })
-
-        return {
-          ...ticket,
-          replies
-        }
-      })
-    )
+    const ticketsWithReplies = await Promise.all(tickets.map(ticket => attachReplies(this.app, ticket)))
 
     return ticketsWithReplies
   }
@@ -91,10 +51,9 @@ export class TicketsService extends KnexService {
       updatedAt: new Date()
     }
 
-    const result = await super.create(ticketData, params)
-
-    return result
+    return super.create(ticketData, params)
   }
+
   async patch(id, data, params) {
     return super.patch(id, data, params)
   }

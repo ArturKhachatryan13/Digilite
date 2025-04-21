@@ -1,6 +1,5 @@
 import { KnexService } from '@feathersjs/knex'
 
-// By default calls the standard Knex adapter service methods but can be customized with your own functionality.
 export class RepliesService extends KnexService {
   async create(data, params) {
     const replyData = {

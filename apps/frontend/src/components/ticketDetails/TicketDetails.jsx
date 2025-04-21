@@ -33,7 +33,7 @@ const TicketDetail = () => {
   const { replies } = ticket || [];
   const [form] = Form.useForm();
 
-  const AddReply = async (data) => {
+  const addReply = async (data) => {
     try {
       const response = await post("/replies", { ...data, ticketId: +id });
       form.resetFields(["message"]);
@@ -147,7 +147,7 @@ const TicketDetail = () => {
         <Divider />
       </div>
       <Container className="form-container">
-        <Form form={form} onFinish={AddReply}>
+        <Form form={form} onFinish={addReply}>
           <Form.Item
             name="message"
             rules={[{ required: true, message: "Please enter a reply" }]}
